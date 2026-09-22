@@ -8,7 +8,7 @@ public class Object {
   private Vector<Face> faces = new Vector<>();
 
   public Vector<Vertex> getVertices(){ return vertices; }
-  public Vector<Vertex> getFaces(){ return vertices; }
+  public Vector<Face> getFaces(){ return faces; }
 
   public void loadFile(String pathname){
     File obj = new File(pathname);
