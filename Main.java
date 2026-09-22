@@ -6,6 +6,6 @@ public class Main{
     o.loadFile("Cube.txt");
 
     w.loadObject(o);
-    // w.renderPlane();
+    w.renderPlane();
   }
 }
