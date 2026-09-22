@@ -1,6 +1,6 @@
 public class Main{
   public static void main(String[] args){
-    World w = new World(32);
+    World w = new World(65);
     Object o = new Object();
 
     o.loadFile("Cube.txt");

@@ -15,7 +15,7 @@ public class World {
 
     // Ranges of each axis {start coords}, {end coords}
     // x1[0][0] y1[0][1] x2[1][0] y2[1][1]
-    origin = new int[] {size/2, size/3};
+    origin = new int[] {size/2, size/5};
     x = new int[][] {origin, {size-1, 0}}; 
     y = new int[][] {origin, {size/2, size-1}}; 
     z = new int[][] {origin, {0, 0}};
@@ -57,7 +57,7 @@ public class World {
         } else {
           System.out.print(".");
         }
-        System.out.print(" ");
+        System.out.print("  ");
       }
       System.out.println();
     }
