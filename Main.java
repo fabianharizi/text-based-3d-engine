@@ -4,7 +4,5 @@ public class Main{
     Object o = new Object();
 
     o.loadFile("Cube.txt");
-
-    w.renderCoordSys();
   }
 }

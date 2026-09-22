@@ -4,8 +4,11 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Object {
-  Vector<Vertex> vertices = new Vector<>();
-  Vector<Face> faces = new Vector<>();
+  private Vector<Vertex> vertices = new Vector<>();
+  private Vector<Face> faces = new Vector<>();
+
+  public Vector<Vertex> getVertices(){ return vertices; }
+  public Vector<Vertex> getFaces(){ return vertices; }
 
   public void loadFile(String pathname){
     File obj = new File(pathname);
