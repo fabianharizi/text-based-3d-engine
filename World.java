@@ -52,7 +52,7 @@ public class World {
         if (plane[i][j] == 1) {
           System.out.print("■");
         } else {
-          System.out.print(" ");
+          System.out.print(".");
         }
         System.out.print(" ");
       }
