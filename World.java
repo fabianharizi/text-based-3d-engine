@@ -4,10 +4,10 @@ public class World {
   int size = 32;
   Object[] objects;
   int[][] plane;
-  int[][] x;
-  int[][] y;
-  int[][] z;
-  int[] origin;
+  double[][] x;
+  double[][] y;
+  double[][] z;
+  double[] origin;
 
   public World(int size){
     this.size = size;
@@ -15,10 +15,10 @@ public class World {
 
     // Ranges of each axis {start coords}, {end coords}
     // x1[0][0] y1[0][1] x2[1][0] y2[1][1]
-    origin = new int[] {size/2, size/5};
-    x = new int[][] {origin, {size-1, 0}}; 
-    y = new int[][] {origin, {size/2, size-1}}; 
-    z = new int[][] {origin, {0, 0}};
+    origin = new double[] {size/4, size/4};
+    x = new double[][] {origin, {size-1, 0}}; 
+    y = new double[][] {origin, {size/2, size-1}}; 
+    z = new double[][] {origin, {0, 0}};
   }
 
 

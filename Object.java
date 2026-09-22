@@ -21,9 +21,9 @@ public class Object {
           String[] v = data.split(" ");
           
           vertices.add(new Vertex(
-            Integer.parseInt(v[1]), 
-            Integer.parseInt(v[2]), 
-            Integer.parseInt(v[3])
+            Double.parseDouble(v[1]), 
+            Double.parseDouble(v[2]), 
+            Double.parseDouble(v[3])
           ));
         } else if (data.charAt(0) == 'f') {
           String[] f = data.split(" ");
