@@ -7,6 +7,7 @@ public class World {
   int[][] x;
   int[][] y;
   int[][] z;
+  int[] center;
 
   public World(int size){
     this.size = size;
@@ -14,9 +15,10 @@ public class World {
 
     // Ranges of each axis {start coords}, {end coords}
     // x1[0][0] y1[0][1] x2[1][0] y2[1][1]
-    x = new int[][] {{0, 0}, {size-1, 0}}; 
-    y = new int[][] {{0, 0}, {0, size-1}}; 
-    z = new int[][] {{0, 0}, {size/2, size/2}};
+    center = new int[] {size/2, size/3};
+    x = new int[][] {center, {size-1, 0}}; 
+    y = new int[][] {center, {size/2, size-1}}; 
+    z = new int[][] {center, {0, 0}};
   }
 
 
@@ -24,8 +26,8 @@ public class World {
     Vector<Vertex> vertices = o.getVertices();
 
     for (Vertex vertex : vertices) {
-      // Initialize coord to 0,0
-      int[] coord = {0, 0};
+      // Initialize coord from the center
+      int[] coord = center;
       int length = size - 1;
 
       // Prepare vector transformations for each axis x, y, z based on ranges
