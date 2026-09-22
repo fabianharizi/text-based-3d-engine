@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Vector;
 
 public class World {
@@ -44,6 +43,20 @@ public class World {
       // Map this new coordinate to the 2D plane
       System.out.println(coord[0] + " " + coord[1]);
       plane[coord[0]][coord[1]] = 1;
+    }
+  }
+
+  public void renderPlane(){
+    for(int i = size - 1; i > -1; i--){
+      for(int j = 0; j < size; j++){
+        if (plane[i][j] == 1) {
+          System.out.print("■");
+        } else {
+          System.out.print(" ");
+        }
+        System.out.print(" ");
+      }
+      System.out.println();
     }
   }
 }
