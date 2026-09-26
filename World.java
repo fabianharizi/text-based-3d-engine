@@ -78,24 +78,20 @@ public class World {
       int[] v1 = vertices_plane.elementAt(face[0]);
       int[] v2 = vertices_plane.elementAt(face[1]);
       int[] v3 = vertices_plane.elementAt(face[2]);
-      double k;
-
+      
       // v1->v2
-      k = (v2[1]-v1[1])/(v2[0]-v1[0]);
       for (int i = v1[0]; i != v2[0]; i -= Integer.signum(v1[0] - v2[0])) {
-        plane[i][(int)(k * i)] = 1;
+        plane[i][lineFunction(i, v1, v2)] = 1;
       }
 
       // v2->v3
-      k = (v3[1]-v2[1])/(v3[0]-v2[0]);
       for (int i = v2[0]; i != v3[0]; i -= Integer.signum(v2[0] - v3[0])) {
-        plane[i][(int)(k * i)] = 1;
+        plane[i][lineFunction(i, v2, v3)] = 1;
       }
 
       // v1->v3
-      k = (v3[1]-v1[1])/(v3[0]-v1[0]);
       for (int i = v1[0]; i != v3[0]; i -= Integer.signum(v1[0] - v3[0])) {
-        plane[i][(int)(k * i)] = 1;
+        plane[i][lineFunction(i, v1, v3)] = 1;
       }
     }
 
@@ -112,5 +108,14 @@ public class World {
       }
       System.out.println();
     }
+  }
+
+  private int lineFunction(int x, int[] v1, int[] v2){
+    if (v1[0] == v2[0]) {
+      return v1[1];
+    }
+
+    double position = (double) (x - v1[0]) / (v2[0] - v1[0]);
+    return (int) Math.round(v1[1] + position * (v2[1] - v1[1]));
   }
 }
