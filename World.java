@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Vector;
 
 public class World {
@@ -10,6 +11,8 @@ public class World {
 
   Vector<int[]> vertices_plane = new Vector<>();  // Reflection of 3D vertices in the 2D plane
   Vector<int[]> faces_plane = new Vector<>();     // Reflection of 3D faces in the 2D plane 
+
+  char[] gradient = {'.',',','-','~',':',';','=','!','*','#','$','@'};
 
 
   public World(int size){
@@ -72,10 +75,29 @@ public class World {
   public void renderPlane(){
     int[][] plane = new int[size][size];
 
-    // Render just the edges of the faces
+    // We need to sort the faces from their largest z-value (furthest -> closest)
+
+    /*
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    */
 
     for (int[] face : faces_plane) {
       // Select 3 points of the face
+
+      int light = new Random().nextInt(gradient.length);
 
       int[] v1 = vertices_plane.elementAt(face[0]);
       int[] v2 = vertices_plane.elementAt(face[1]);
@@ -110,12 +132,14 @@ public class World {
       if(denom != 0.0){
         for(int i = box[0][0]; i <= box[1][0]; i++){
           for(int j = box[0][1]; j <= box[1][1]; j++){
-            double a = ((v2[1]-v3[1])*(i-v3[0])+(v3[0]-v2[0])*(j-v3[1])) / denom;
+
+            // Formula to find the weighted coordinates
+            double a = ((v2[1]-v3[1])*(i-v3[0])+(v3[0]-v2[0])*(j-v3[1])) / denom; 
             double b = ((v3[1]-v1[1])*(i-v3[0])+(v1[0]-v3[0])*(j-v3[1])) / denom;
             double c = 1.0 - a - b;
 
             if((a >= 0 && a <= 1) && (b >= 0 && b <= 1) && (c >= 0 && c <= 1)){
-              plane[i][j] = 1;
+              plane[i][j] = light;
             }
           }
         }
@@ -124,14 +148,7 @@ public class World {
 
     for(int i = size - 1; i > -1; i--){
       for(int j = 0; j < size; j++){
-        if (plane[j][i] == 1) {
-          System.out.print("■");
-        } else if (plane[j][i] == 2){
-          System.out.print("0");
-        } else {
-          System.out.print(".");
-        }
-        System.out.print(" ");
+        System.out.print(gradient[plane[i][j]] + " ");
       }
       System.out.println();
     }
