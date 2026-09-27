@@ -3,10 +3,10 @@ import java.util.Vector;
 public class World {
   int size = 32;
 
-  double[][] x;
-  double[][] y;
-  double[][] z;
-  double[] origin;
+  int[][] x;
+  int[][] y;
+  int[][] z;
+  int[] origin;
 
   Vector<int[]> vertices_plane = new Vector<>();  // Reflection of 3D vertices in the 2D plane
   Vector<int[]> faces_plane = new Vector<>();     // Reflection of 3D faces in the 2D plane 
@@ -17,10 +17,10 @@ public class World {
 
     // Ranges of each axis {start coords}, {end coords}
     // x1[0][0] y1[0][1] x2[1][0] y2[1][1]
-    origin = new double[] {size/4, size/4};
-    x = new double[][] {origin, {size-1, 0}}; 
-    y = new double[][] {origin, {size/2, size-1}}; 
-    z = new double[][] {origin, {0, 0}};
+    origin = new int[] {size/4, size/4};
+    x = new int[][] {origin, {size-1, 0}}; 
+    y = new int[][] {origin, {size/2, size-1}}; 
+    z = new int[][] {origin, {0, 0}};
   }
 
 
@@ -75,23 +75,50 @@ public class World {
     // Render just the edges of the faces
 
     for (int[] face : faces_plane) {
+      // Select 3 points of the face
+
       int[] v1 = vertices_plane.elementAt(face[0]);
       int[] v2 = vertices_plane.elementAt(face[1]);
       int[] v3 = vertices_plane.elementAt(face[2]);
+
+      /*--------------------------------------
+       |
+       |  TRIANGLE RASTERIZATION
+       |  
+       |  Render faces using the barycentric coordinate technique
+       |  Point P inside triangle T(A,B,C) can be expressed as 
+       |    P = αA + βB + γC
+       |
+       |  The point is inside the triangle if all α, β and γ are in [0;1],
+       |  Otherwise, it is outside the triangle
+       |    
+       |  Area of the triangle when we know 3 points can be found using the  Shoelace formula: 
+       |    S = |x1(y2-y3) + x2(y3-y1) + x3(y1-y2)| / 2
+       |
+       +-------------------------------------*/
+
       
-      // v1->v2
-      for (int i = v1[0]; i != v2[0]; i -= Integer.signum(v1[0] - v2[0])) {
-        plane[i][lineFunction(i, v1, v2)] = 1;
-      }
+      // Find the bounding box of the face (so we don't have to go through the whole array)
+      int[][] box = {
+        {Math.min(Math.min(v1[0], v2[0]), v3[0]), Math.min(Math.min(v1[1], v2[1]), v3[1])}, 
+        {Math.max(Math.max(v1[0], v2[0]), v3[0]), Math.max(Math.max(v1[1], v2[1]), v3[1])}
+      };
 
-      // v2->v3
-      for (int i = v2[0]; i != v3[0]; i -= Integer.signum(v2[0] - v3[0])) {
-        plane[i][lineFunction(i, v2, v3)] = 1;
-      }
+      // Calculates the common denominator to avoid division by 0 (when all points are in a straight line)
+      double denom = (double)((v2[1] - v3[1]) * (v1[0] - v3[0]) + (v3[0] - v2[0]) * (v1[1] - v3[1]));
 
-      // v1->v3
-      for (int i = v1[0]; i != v3[0]; i -= Integer.signum(v1[0] - v3[0])) {
-        plane[i][lineFunction(i, v1, v3)] = 1;
+      if(denom != 0.0){
+        for(int i = box[0][0]; i <= box[1][0]; i++){
+          for(int j = box[0][1]; j <= box[1][1]; j++){
+            double a = ((v2[1]-v3[1])*(i-v3[0])+(v3[0]-v2[0])*(j-v3[1])) / denom;
+            double b = ((v3[1]-v1[1])*(i-v3[0])+(v1[0]-v3[0])*(j-v3[1])) / denom;
+            double c = 1.0 - a - b;
+
+            if((a >= 0 && a <= 1) && (b >= 0 && b <= 1) && (c >= 0 && c <= 1)){
+              plane[i][j] = 1;
+            }
+          }
+        }
       }
     }
 
@@ -109,13 +136,8 @@ public class World {
       System.out.println();
     }
   }
-
-  private int lineFunction(int x, int[] v1, int[] v2){
-    if (v1[0] == v2[0]) {
-      return v1[1];
-    }
-
-    double position = (double) (x - v1[0]) / (v2[0] - v1[0]);
-    return (int) Math.round(v1[1] + position * (v2[1] - v1[1]));
+  
+  private double triangleArea(int[] v1, int[] v2, int[] v3){
+    return Math.abs(v1[0]*(v2[1] - v3[1]) + v2[0]*(v3[1] - v1[1]) + v3[0]*(v1[1] - v2[1])) / 2;
   }
 }
