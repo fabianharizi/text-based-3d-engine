@@ -1,4 +1,3 @@
-import java.util.Random;
 import java.util.Vector;
 
 public class World {
@@ -12,6 +11,8 @@ public class World {
   Vector<int[]> vertices_plane = new Vector<>();  // Reflection of 3D vertices in the 2D plane
   Vector<int[]> faces_plane = new Vector<>();     // Reflection of 3D faces in the 2D plane 
 
+  int[][] view = new int[size][size];
+
   char[] gradient = {'.',',','-','~',':',';','=','!','*','#','$','@'};
 
 
@@ -20,10 +21,11 @@ public class World {
 
     // Ranges of each axis {start coords}, {end coords}
     // x1[0][0] y1[0][1] x2[1][0] y2[1][1]
-    origin = new int[] {size/4, size/4};
+    origin = new int[] {size/3, size/2};
     x = new int[][] {origin, {size-1, 0}}; 
-    y = new int[][] {origin, {size/2, size-1}}; 
+    y = new int[][] {origin, {size/4, size-1}}; 
     z = new int[][] {origin, {0, 0}};
+    view = new int[size][size];
   }
 
 
@@ -63,18 +65,6 @@ public class World {
       faces_plane.add(vertices_index_in_face);
     }
 
-
-    for (int[] vertex : vertices_plane) {
-      System.out.println("v " + vertex[0] + " " + vertex[1]);
-    }
-    for (int[] face : faces_plane) {
-      System.out.println("f " + face[0] + " " + face[1] + " " + face[2]);
-    }
-  }
-
-  public void renderPlane(){
-    int[][] plane = new int[size][size];
-
     // We need to sort the faces from their largest z-value (furthest -> closest)
 
     /*
@@ -97,7 +87,7 @@ public class World {
     for (int[] face : faces_plane) {
       // Select 3 points of the face
 
-      int light = new Random().nextInt(gradient.length);
+      int light = gradient.length - 1;
 
       int[] v1 = vertices_plane.elementAt(face[0]);
       int[] v2 = vertices_plane.elementAt(face[1]);
@@ -139,22 +129,22 @@ public class World {
             double c = 1.0 - a - b;
 
             if((a >= 0 && a <= 1) && (b >= 0 && b <= 1) && (c >= 0 && c <= 1)){
-              plane[i][j] = light;
+              if(i >= 0 && i < view.length && j >= 0 && j < view.length){
+                view[i][j] = light;
+              }
             }
           }
         }
       }
     }
+  }
 
+  public void renderPlane(){
     for(int i = size - 1; i > -1; i--){
       for(int j = 0; j < size; j++){
-        System.out.print(gradient[plane[i][j]] + " ");
+        System.out.print(gradient[view[i][j]] + " ");
       }
       System.out.println();
     }
-  }
-  
-  private double triangleArea(int[] v1, int[] v2, int[] v3){
-    return Math.abs(v1[0]*(v2[1] - v3[1]) + v2[0]*(v3[1] - v1[1]) + v3[0]*(v1[1] - v2[1])) / 2;
   }
 }
