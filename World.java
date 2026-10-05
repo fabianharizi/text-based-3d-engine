@@ -3,15 +3,17 @@ import java.util.Vector;
 public class World {
   int size = 32;
 
+  // Render view properties
+  int[][] view = new int[size][size];
   int[][] x;
   int[][] y;
   int[][] z;
   int[] origin;
 
+  // Image of the 3D space in the 2D view
   Vector<int[]> vertices_plane = new Vector<>();  // Reflection of 3D vertices in the 2D plane
   Vector<int[]> faces_plane = new Vector<>();     // Reflection of 3D faces in the 2D plane 
 
-  int[][] view = new int[size][size];
 
   char[] gradient = {'.',',','-','~',':',';','=','!','*','#','$','@'};
 
@@ -21,9 +23,9 @@ public class World {
 
     // Ranges of each axis {start coords}, {end coords}
     // x1[0][0] y1[0][1] x2[1][0] y2[1][1]
-    origin = new int[] {size/3, size/2};
+    origin = new int[] {size/2, size/3};
     x = new int[][] {origin, {size-1, 0}}; 
-    y = new int[][] {origin, {size/4, size-1}}; 
+    y = new int[][] {origin, {size/2, size-1}}; 
     z = new int[][] {origin, {0, 0}};
     view = new int[size][size];
   }
@@ -140,8 +142,8 @@ public class World {
   }
 
   public void renderPlane(){
-    for(int i = size - 1; i > -1; i--){
-      for(int j = 0; j < size; j++){
+    for(int j = size-1; j > 0; j--){
+      for(int i = 0; i < size-1; i++){
         System.out.print(gradient[view[i][j]] + " ");
       }
       System.out.println();
