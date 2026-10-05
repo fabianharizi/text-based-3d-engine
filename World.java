@@ -141,7 +141,7 @@ public class World {
     }
   }
 
-  public void renderPlane(){
+  public void render(){
     for(int j = size-1; j > 0; j--){
       for(int i = 0; i < size-1; i++){
         System.out.print(gradient[view[i][j]] + " ");
