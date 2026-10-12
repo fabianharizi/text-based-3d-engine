@@ -4,30 +4,29 @@ public class World {
   int size = 32;
 
   // Render view properties
-  int[][] view = new int[size][size];
   int[][] x;
   int[][] y;
   int[][] z;
   int[] origin;
 
   // Image of the 3D space in the 2D view
-  Vector<int[]> vertices_plane = new Vector<>();  // Reflection of 3D vertices in the 2D plane
-  Vector<int[]> faces_plane = new Vector<>();     // Reflection of 3D faces in the 2D plane 
+  public int[][] view = new int[size][size];
+  public Vector<int[]> vertices_plane = new Vector<>();  // Reflection of 3D vertices in the 2D plane
+  public Vector<int[]> faces_plane = new Vector<>();     // Reflection of 3D faces in the 2D plane 
 
-
-  char[] gradient = {'.',',','-','~',':',';','=','!','*','#','$','@'};
-
+  // Install camera to the world
+  Camera cam = new Camera();
 
   public World(int size){
     this.size = size;
 
     // Ranges of each axis {start coords}, {end coords}
     // x1[0][0] y1[0][1] x2[1][0] y2[1][1]
-    origin = new int[] {size/2, size/3};
-    x = new int[][] {origin, {size-1, 0}}; 
-    y = new int[][] {origin, {size/2, size-1}}; 
-    z = new int[][] {origin, {0, 0}};
-    view = new int[size][size];
+    this.origin = new int[] {size/2, size/3};
+    this.x = new int[][] {origin, {size-1, 0}}; 
+    this.y = new int[][] {origin, {size/2, size-1}}; 
+    this.z = new int[][] {origin, {0, 0}};
+    this.view = new int[size][size];
   }
 
 
@@ -66,87 +65,10 @@ public class World {
 
       faces_plane.add(vertices_index_in_face);
     }
-
-    // We need to sort the faces from their largest z-value (furthest -> closest)
-
-    /*
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    */
-
-    for (int[] face : faces_plane) {
-      // Select 3 points of the face
-
-      int light = gradient.length - 1;
-
-      int[] v1 = vertices_plane.elementAt(face[0]);
-      int[] v2 = vertices_plane.elementAt(face[1]);
-      int[] v3 = vertices_plane.elementAt(face[2]);
-
-      /*--------------------------------------
-       |
-       |  TRIANGLE RASTERIZATION
-       |  
-       |  Render faces using the barycentric coordinate technique
-       |  Point P inside triangle T(A,B,C) can be expressed as 
-       |    P = αA + βB + γC
-       |
-       |  The point is inside the triangle if all α, β and γ are in [0;1],
-       |  Otherwise, it is outside the triangle
-       |    
-       |  Area of the triangle when we know 3 points can be found using the  Shoelace formula: 
-       |    S = |x1(y2-y3) + x2(y3-y1) + x3(y1-y2)| / 2
-       |
-       +-------------------------------------*/
-
-      
-      // Find the bounding box of the face (so we don't have to go through the whole array)
-      int[][] box = {
-        {Math.min(Math.min(v1[0], v2[0]), v3[0]), Math.min(Math.min(v1[1], v2[1]), v3[1])}, 
-        {Math.max(Math.max(v1[0], v2[0]), v3[0]), Math.max(Math.max(v1[1], v2[1]), v3[1])}
-      };
-
-      // Calculates the common denominator to avoid division by 0 (when all points are in a straight line)
-      double denom = (double)((v2[1] - v3[1]) * (v1[0] - v3[0]) + (v3[0] - v2[0]) * (v1[1] - v3[1]));
-
-      if(denom != 0.0){
-        for(int i = box[0][0]; i <= box[1][0]; i++){
-          for(int j = box[0][1]; j <= box[1][1]; j++){
-
-            // Formula to find the weighted coordinates
-            double a = ((v2[1]-v3[1])*(i-v3[0])+(v3[0]-v2[0])*(j-v3[1])) / denom; 
-            double b = ((v3[1]-v1[1])*(i-v3[0])+(v1[0]-v3[0])*(j-v3[1])) / denom;
-            double c = 1.0 - a - b;
-
-            if((a >= 0 && a <= 1) && (b >= 0 && b <= 1) && (c >= 0 && c <= 1)){
-              if(i >= 0 && i < view.length && j >= 0 && j < view.length){
-                view[i][j] = light;
-              }
-            }
-          }
-        }
-      }
-    }
   }
 
   public void render(){
-    for(int j = size-1; j > 0; j--){
-      for(int i = 0; i < size-1; i++){
-        System.out.print(gradient[view[i][j]] + " ");
-      }
-      System.out.println();
-    }
+    cam.loadWorld(this);
+    cam.render(view, size);
   }
 }
