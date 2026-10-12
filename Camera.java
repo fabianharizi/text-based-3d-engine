@@ -49,7 +49,7 @@ public class Camera {
               if(i >= 0 && i < w.view.length && j >= 0 && j < w.view.length){
                 w.view[i][j] = 1;
               }
-            }
+            } 
           }
         }
       }
@@ -62,7 +62,7 @@ public class Camera {
         if(view[i][j] == 1){
           System.out.print("@ ");
         } else {
-          System.out.print("  ");
+          System.out.print(". ");
         }
       }
       System.out.println();

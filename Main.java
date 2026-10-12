@@ -3,7 +3,7 @@ public class Main{
     World w = new World(33);
     Object o = new Object();
 
-    o.loadFile("Cube.txt");
+    o.loadFile("Cube.obj");
 
     w.loadObject(o);
     w.render();
