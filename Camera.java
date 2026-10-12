@@ -1,11 +1,10 @@
 public class Camera {
-  private char[] gradient = {'.',',','-','~',':',';','=','!','*','#','$','@'};
+  int[] position;
+  int[] orientation;
 
   public void loadWorld(World w){
     for (int[] face : w.faces_plane) {
       // Select 3 points of the face
-
-      int light = gradient.length - 1;
 
       int[] v1 = w.vertices_plane.elementAt(face[0]);
       int[] v2 = w.vertices_plane.elementAt(face[1]);
@@ -48,7 +47,7 @@ public class Camera {
 
             if((a >= 0 && a <= 1) && (b >= 0 && b <= 1) && (c >= 0 && c <= 1)){
               if(i >= 0 && i < w.view.length && j >= 0 && j < w.view.length){
-                w.view[i][j] = light;
+                w.view[i][j] = 1;
               }
             }
           }
@@ -60,7 +59,11 @@ public class Camera {
   public void render(int[][] view, int size){
     for(int j = size-1; j > 0; j--){
       for(int i = 0; i < size-1; i++){
-        System.out.print(gradient[view[i][j]] + " ");
+        if(view[i][j] == 1){
+          System.out.print("@ ");
+        } else {
+          System.out.print("  ");
+        }
       }
       System.out.println();
     }
